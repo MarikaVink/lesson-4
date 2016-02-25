@@ -1,5 +1,9 @@
 <?php
 
+	//required another php file
+	require_once("../../config.php");
+
+
 	$everything_was_okay = true;
 
 	//check if there is variable in the URL
@@ -87,6 +91,35 @@
 	if($everything_was_okay == true){
 		
 		echo "Saving to database . . .";
+		
+		//connection with username and password
+		//access username from config
+		//echo $db_username;
+		
+		//1 servername
+		//username	
+		//password
+		//database
+		$mysql = new mysqli("localhost",$db_username, $db_password,"webpr2016_marvin");
+		
+		$stmt = $mysql->prepare("INSERT INTO messages_sample(recipient, message, sender) VALUES (?,?,?)");
+		
+		//echo error
+		echo $mysql->error;
+		
+		
+		//WE ARE REPLACING QUESTION MARKS
+		//s - string, date or smth that is based on characters and 
+		//i - integer, number_format
+		//d - decimal, float
+		
+		$stmt->bind_param("sss",$_GET["to"],$_GET["message"],$_GET["from"] );
+		
+		//save
+		if($stmt->execute()){
+			echo "saved successfully";
+		}else{
+			echo $stmt->error;}
 	}
 ?>
 
